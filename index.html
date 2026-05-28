@@ -2370,7 +2370,13 @@ function openLightbox(btn) {
   document.getElementById('lbImg').src = img?.src || '';
   document.getElementById('lbTitle').textContent = title;
   document.getElementById('lbTags').innerHTML = tags;
+  document.getElementById('lbEditTitle').value = title;
+  document.getElementById('lbEditTags').value = [...mc.querySelectorAll('.mt')].map(t=>t.textContent).join(', ');
+  document.getElementById('lbEditMode').style.display = document.body.classList.contains('staff-mode') ? 'block' : 'none';
   document.getElementById('lightbox').classList.add('show');
+}
+function saveLightboxEdit() {
+  alert('✓ บันทึกแล้ว (ระบบจัดเก็บจริงจะพัฒนาต่อ)');
 }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('show');
@@ -2379,11 +2385,17 @@ function closeLightbox() {
   <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <span class="lightbox-close">×</span>
   <img id="lbImg" src="" alt="">
-  <div class="lightbox-info">
+  <div class="lightbox-info" onclick="event.stopPropagation()">
     <div class="lightbox-title" id="lbTitle"></div>
-    <div id="lbDesc" style="color:#666;font-size:12px;margin-top:4px"></div>
     <div class="lightbox-tags" id="lbTags"></div>
+    <div id="lbEditMode" style="display:none;margin-top:10px;border-top:1px solid #eee;padding-top:10px">
+      <div style="font-size:11px;color:#888;margin-bottom:6px">✏️ โหมดแก้ไข (บุคลากร)</div>
+      <input id="lbEditTitle" style="width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;margin-bottom:6px;font-family:inherit">
+      <input id="lbEditTags" placeholder="tag คั่นด้วยคอมม่า เช่น สถาปัตยกรรม, ไทย" style="width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:inherit">
+      <button onclick="saveLightboxEdit()" style="margin-top:8px;padding:7px 18px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit">✓ บันทึก</button>
+    </div>
   </div>
+</div>
 </div>
 </body>
 </html>

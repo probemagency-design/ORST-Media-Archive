@@ -2363,7 +2363,9 @@ function addTag(e, wrapId, cls) {
   inp.value = ''; e.preventDefault();
 }
 function openLightbox(btn) {
+  var currentLbMc = null;
   var mc = btn.closest('.mc');
+  currentLbMc = mc;
   var img = mc.querySelector('img');
   var title = mc.querySelector('.mtit')?.textContent || '';
   var tags = [...mc.querySelectorAll('.mt')].map(t => `<span class="mt ${t.className.replace('mt','').trim()}">${t.textContent}</span>`).join('');
@@ -2376,7 +2378,27 @@ function openLightbox(btn) {
   document.getElementById('lightbox').classList.add('show');
 }
 function saveLightboxEdit() {
-  alert('✓ บันทึกแล้ว (ระบบจัดเก็บจริงจะพัฒนาต่อ)');
+  var newTitle = document.getElementById('lbEditTitle').value.trim();
+  var newTags = document.getElementById('lbEditTags').value.split(',').map(t=>t.trim()).filter(t=>t);
+  
+  // อัปเดตใน Lightbox ทันที
+  document.getElementById('lbTitle').textContent = newTitle;
+  document.getElementById('lbTags').innerHTML = newTags.map(t=>`<span class="mt ti">${t}</span>`).join('');
+  
+  // อัปเดตการ์ดในหน้าหลัก
+  if (currentLbMc) {
+    var titleEl = currentLbMc.querySelector('.mtit');
+    if (titleEl) titleEl.textContent = newTitle;
+    var tagsEl = currentLbMc.querySelector('.mtags');
+    if (tagsEl) tagsEl.innerHTML = newTags.map(t=>`<span class="mt ti">${t}</span>`).join('');
+    
+    // บันทึกใน localStorage
+    var key = 'edit_' + currentLbMc.querySelector('img')?.src?.substring(0,50);
+    localStorage.setItem(key, JSON.stringify({title: newTitle, tags: newTags}));
+  }
+  
+  document.getElementById('lbEditMode').style.background = '#f0fdf4';
+  setTimeout(()=>document.getElementById('lbEditMode').style.background='', 1000);
 }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('show');

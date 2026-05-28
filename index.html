@@ -2362,8 +2362,9 @@ function addTag(e, wrapId, cls) {
   wrap.insertBefore(pill, ghost);
   inp.value = ''; e.preventDefault();
 }
-function openLightbox(btn) {
   var currentLbMc = null;
+function openLightbox(btn) {
+  
   var mc = btn.closest('.mc');
   currentLbMc = mc;
   var img = mc.querySelector('img');

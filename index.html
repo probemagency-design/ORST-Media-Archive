@@ -107,7 +107,13 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.93);backdrop-
 body.staff-mode .mc.internal-item{display:block}
 body.staff-mode .staff-only{display:block}
 body.staff-mode .mint-badge.internal{display:block}
-
+.lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;flex-direction:column;padding:20px}
+.lightbox.show{display:flex}
+.lightbox img{max-width:90vw;max-height:70vh;border-radius:8px;object-fit:contain}
+.lightbox-info{background:#fff;border-radius:10px;padding:14px 20px;margin-top:14px;max-width:500px;width:100%;font-size:13px}
+.lightbox-title{font-weight:600;font-size:15px;margin-bottom:6px}
+.lightbox-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.lightbox-close{position:fixed;top:18px;right:24px;color:#fff;font-size:32px;cursor:pointer;line-height:1}
 
 /* ── UPLOAD styles ── */
 
@@ -550,7 +556,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">หอไตร สถาปัตยกรรมไทยโบราณ</div>
@@ -567,7 +573,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">ไปรษณียบัตรสยาม 2448 หญิงสยามในชุดโกนจุก</div>
@@ -584,7 +590,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">หอไตร บันไดไม้แกะสลัก</div>
@@ -601,7 +607,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">หน้าสำนักงาน ตึกแดง</div>
@@ -618,7 +624,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">ไปรษณียบัตร วัดพระแก้ว กรุงเทพฯ 1905</div>
@@ -635,7 +641,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">ลายแกะสลักหน้าจั่ว หอไตร</div>
@@ -652,7 +658,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">ไปรษณียบัตร การแสดงโขนสยาม 1905</div>
@@ -669,7 +675,7 @@ function setMode(on) {
         <div class="mov"></div>
         <div class="mact">
           <button class="mbt mbt-dl">⬇ ดาวน์โหลด</button>
-          <button class="mbt mbt-vw">ดูภาพ</button>
+          <button class="mbt mbt-vw"onclick="openLightbox(this)">ดูภาพ</button>
         </div>
         <div class="minf">
           <div class="mtit">ตึกแดง อาคารประวัติศาสตร์</div>
@@ -2356,7 +2362,28 @@ function addTag(e, wrapId, cls) {
   wrap.insertBefore(pill, ghost);
   inp.value = ''; e.preventDefault();
 }
-
+function openLightbox(btn) {
+  var mc = btn.closest('.mc');
+  var img = mc.querySelector('img');
+  var title = mc.querySelector('.mtit')?.textContent || '';
+  var tags = [...mc.querySelectorAll('.mt')].map(t => `<span class="mt ${t.className.replace('mt','').trim()}">${t.textContent}</span>`).join('');
+  document.getElementById('lbImg').src = img?.src || '';
+  document.getElementById('lbTitle').textContent = title;
+  document.getElementById('lbTags').innerHTML = tags;
+  document.getElementById('lightbox').classList.add('show');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
 </script>
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">×</span>
+  <img id="lbImg" src="" alt="">
+  <div class="lightbox-info">
+    <div class="lightbox-title" id="lbTitle"></div>
+    <div id="lbDesc" style="color:#666;font-size:12px;margin-top:4px"></div>
+    <div class="lightbox-tags" id="lbTags"></div>
+  </div>
+</div>
 </body>
 </html>

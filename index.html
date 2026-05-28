@@ -1257,15 +1257,30 @@ function renderSaved() {
       </div>
       <div class="cb">
         <div class="f-grid">
-          <div class="f-group">
-            <div class="f-label">ชื่อโครงการ *</div>
-            <input class="f-input" id="np-name" placeholder="เช่น สัมมนาวิชาการประจำปี">
-          </div>
-          <div class="f-group">
-            <div class="f-label">ปี (พ.ศ.)</div>
-            <input class="f-input" id="np-year" type="number" value="2568" min="2500" max="2600">
-          </div>
-        </div>
+  <div class="f-group">
+    <div class="f-label">ชื่อโครงการ *</div>
+    <input class="f-input" id="np-name" placeholder="เช่น สัมมนาวิชาการประจำปี">
+  </div>
+  <div class="f-group">
+    <div class="f-label">ปี (พ.ศ.)</div>
+    <input class="f-input" id="np-year" type="number" value="2568" min="2500" max="2600">
+  </div>
+</div>
+<div class="f-group">
+  <div class="f-label">ประเภท</div>
+  <select class="f-select" id="np-type">
+    <option>โครงการ</option>
+    <option>กิจกรรม</option>
+    <option>ประชุม</option>
+    <option>อบรม</option>
+    <option>บรรยาย</option>
+    <option>สัมมนา</option>
+    <option value="other">อื่นๆ</option>
+  </select>
+  <input class="f-input" id="np-type-other" placeholder="ระบุประเภท..." 
+    style="display:none;margin-top:6px"
+    oninput="this.value">
+</div>
         <div class="f-group">
           <div class="f-label">tag หลัก (ติดทุกภาพในโครงการ)</div>
           <div class="tag-box" id="np-tags">
@@ -2124,12 +2139,14 @@ function createProject() {
   var name = document.getElementById('np-name').value.trim();
   if (!name) { document.getElementById('np-name').focus(); return; }
   var tags = [...document.getElementById('np-tags').querySelectorAll('.pill')].map(p => p.textContent.replace('×','').trim());
-  var proj = {
-    id: Date.now().toString(), name,
-    year: parseInt(document.getElementById('np-year').value),
-    tags, date: document.getElementById('np-date').value,
-    acc: document.getElementById('np-acc').value, count: 0
-  };
+var typeVal = document.getElementById('np-type').value;
+var proj = {
+  id: Date.now().toString(), name,
+  year: parseInt(document.getElementById('np-year').value),
+  type: typeVal === 'อื่นๆ' ? document.getElementById('np-type-other').value : typeVal,
+  tags, date: document.getElementById('np-date').value,
+  acc: document.getElementById('np-acc').value, count: 0
+};
   projects.unshift(proj);
   localStorage.setItem('projects', JSON.stringify(projects));
   currentProj = proj;
